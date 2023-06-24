@@ -1,0 +1,61 @@
+﻿@model List<User>
+
+@{
+    ViewData["Title"] = "Advisors";
+}
+
+<h1>Advisors</h1>
+
+<div class="search-container">
+    <form method="get" asp-controller="Advisors" asp-action="Index">
+        <div class="input-group">
+            <input type="text" class="form-control" name="search" placeholder="Search...">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Search</button>
+                <button class="btn btn-secondary" type="button" onclick="window.location.href='@Url.Action("Index", "Advisor")'">Reset</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var advisor in Model)
+        {
+                <tr>
+                    <td>@advisor.Id</td>
+                    <td>@advisor.FirstName</td>
+                    <td>@advisor.LastName</td>
+                    <td>@advisor.Email</td>
+                    <td>@advisor.PhoneNumber</td>
+
+                     <td>
+                    <form asp-controller="Clients" asp-action="Details" asp-route-id="@advisor.Id" method="get">
+                        <button type="submit" class="btn btn-info">View</button>
+                    </form>
+
+                </td>
+
+
+                </tr>
+        }
+    </tbody>
+</table>
+
+@if (User.IsInRole("Admin"))
+{
+    <div>
+        <a href="@Url.Action("ExportToCsv", "Advisors")" class="btn btn-primary">Export to CSV</a>
+    </div>
+}

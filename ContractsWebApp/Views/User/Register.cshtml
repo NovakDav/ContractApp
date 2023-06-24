@@ -1,0 +1,53 @@
+﻿@using ContractsWebApp.ViewModel
+@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2>Register</h2>
+            <form method="post" asp-action="Register">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" class="form-control" id="firstName" name="FirstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" class="form-control" id="lastName" name="LastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" id="password" name="Password" required>
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number:</label>
+                    <input type="text" class="form-control" id="phoneNumber" name="PhoneNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="ssn">Social Security Number:</label>
+                    <input type="text" class="form-control" id="ssn" name="SocialSecurityNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" class="form-control" id="age" name="Age" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+
+            <div class="register-link">
+                <p>Already have account? <a href="@Url.Action("Login", "User")">Login here</a>.</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+

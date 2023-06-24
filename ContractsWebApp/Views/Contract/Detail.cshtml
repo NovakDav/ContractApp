@@ -1,0 +1,87 @@
+﻿@model ContractDetailsViewModel
+
+@{
+    ViewData["Title"] = "Contract Details";
+}
+
+<h1>Contract Details</h1>
+
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <td>@Model.Contract.Id</td>
+    </tr>
+    <tr>
+        <th>Contract Number</th>
+        <td>@Model.Contract.ContractNumber</td>
+    </tr>
+    <tr>
+        <th>Institution</th>
+        <td>@Model.Contract.Institution</td>
+    </tr>
+    <tr>
+        <th>Manager</th>
+        <td>@Model.Contract.ManagerId</td>
+    </tr>
+    <tr>
+        <th>Date Signed</th>
+        <td>@Model.Contract.DateSigned</td>
+    </tr>
+    <tr>
+        <th>Valid From</th>
+        <td>@Model.Contract.ValidFrom</td>
+    </tr>
+    <tr>
+        <th>Valid To</th>
+        <td>@Model.Contract.ValidTo</td>
+    </tr>
+</table>
+
+<h2>Participants</h2>
+
+@if (Model.Participants != null && Model.Participants.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Participant ID</th>
+                <th>Participant First Name</th>
+                <th>Participant Last Name</th>
+                <th>Participant Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var participant in Model.Participants)
+            {
+                <tr>
+                    <td>@participant.Id</td>
+                    <td>@participant.FirstName</td>
+                    <td>@participant.LastName</td>
+                    <td>@participant.Email</td>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Advisor"))
+                    {
+                    <td>
+                        <form asp-controller="Clients" asp-action="Details" asp-route-id="@participant.Id" method="get">
+                            <button type="submit" class="btn btn-info">View</button>
+                        </form>
+
+                    </td>
+                    }
+
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No participants found for this contract.</p>
+}
+
+@if (User.IsInRole("Admin") || User.IsInRole("Advisor"))
+{
+    <div class="button-group">
+        <a asp-controller="Contract" asp-action="Index" class="btn btn-primary">Back to Contracts</a>
+    </div>
+}

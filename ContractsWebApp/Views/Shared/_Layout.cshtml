@@ -1,0 +1,111 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ContractsWebApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ContractsWebApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ContractsWebApp</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="@Url.Action("Index", "Client")">Clients</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="@Url.Action("Index", "Advisor")">Advisors</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="@Url.Action("Index", "Contract")">Contracts</a>
+                            </li>
+                            
+                        }
+                        else if (User.IsInRole("Advisor"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="@Url.Action("Index", "Client")">Clients</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="@Url.Action("Index", "Contract", new { managerId = User.FindFirstValue(ClaimTypes.NameIdentifier) })">Contracts</a>
+                            </li>
+                        }
+                        else if (User.IsInRole("Client"))
+                        {                           
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="@Url.Action("Index", "Contract", new { managerId = User.FindFirstValue(ClaimTypes.NameIdentifier) })">Contracts</a>
+                            </li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <div class="button-group">
+                            <li class="nav-item">
+                                <a href="@Url.Action("Register", "User")" class="btn btn-primary">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("Login", "User")" class="btn btn-primary">Login</a>
+                            </li>
+                            </div>
+                        }
+                        else
+                        {
+                    <div class="button-group">
+                        <li class="nav-item">
+                            <form id="logoutForm" method="post" asp-controller="Account" asp-action="Logout">
+                                <button type="submit" class="nav-link btn btn-link text-dark" style="padding-top:.5rem;padding-bottom:.5rem">Logout</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form asp-controller="Clients" asp-action="Details" asp-route-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)" method="get">
+                                <button type="submit" class="btn btn-info">Profile</button>
+                            </form>
+
+
+                        </li>
+                    </div>
+
+
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - ContractsWebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

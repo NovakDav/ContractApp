@@ -1,0 +1,114 @@
+﻿@model ClientDetailsViewModel
+@using System.Security.Claims
+
+<h1>Client Details</h1>
+
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <td>@Model.Client.Id</td>
+    </tr>
+    <tr>
+        <th>First Name</th>
+        <td>@Model.Client.FirstName</td>
+    </tr>
+    <tr>
+        <th>Last Name</th>
+        <td>@Model.Client.LastName</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>@Model.Client.Email</td>
+    </tr>
+    <tr>
+        <th>Phone</th>
+        <td>@Model.Client.PhoneNumber</td>
+    </tr>
+    <tr>
+        <th>Personal Identification Number</th>
+        <td>@Model.Client.PersonalIdentificationNumber</td>
+    </tr>
+    <tr>
+        <th>Age</th>
+        <td>@Model.Client.Age</td>
+    </tr>
+    <tr>
+        <th>Role</th>
+        <td>@Model.Client.Role</td>
+    </tr>
+</table>
+
+<div class="button-group">
+    @if (User.IsInRole("Admin"))
+    {
+        <form asp-controller="Clients" asp-action="Delete" method="post">
+            <input type="hidden" name="id" value="@Model.Client.Id" />
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+
+        @if (Model.Client.Role == UserRole.Advisor)
+        {
+            <form asp-controller="Clients" asp-action="ChangeRole" method="post">
+                <input type="hidden" name="id" value="@Model.Client.Id" />
+                <input type="hidden" name="role" value="Client" />
+                <button type="submit" class="btn btn-primary">Make Client</button>
+            </form>
+        }
+
+        @if (Model.Client.Role == UserRole.Client)
+        {
+            <form asp-controller="Clients" asp-action="ChangeRole" method="post">
+                <input type="hidden" name="id" value="@Model.Client.Id" />
+                <input type="hidden" name="role" value="Advisor" />
+                <button type="submit" class="btn btn-primary">Make Advisor</button>
+            </form>
+        }
+    }
+
+
+    @if (Model.Client.Id == User.FindFirstValue(ClaimTypes.NameIdentifier))
+    {
+        <div class="button-group">
+            <a href="@Url.Action("EditProfile", "Client")" class="btn btn-primary">Edit</a>
+        </div>
+    }
+</div>
+
+<h2>Contracts</h2>
+
+@if (Model.Contracts != null && Model.Contracts.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Institution</th>
+                <th>Manager</th>
+                <th>Valid From</th>
+                <th>Valid To</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contract in Model.Contracts)
+            {
+                <tr>
+                    <td>@contract.Id</td>
+                    <td>@contract.Institution</td>
+                    <td>@contract.ManagerId</td>
+                    <td>@contract.ValidFrom</td>
+                    <td>@contract.ValidTo</td>
+                    <td>
+                        <form asp-controller="Contracts" asp-action="Details" asp-route-id="@contract.Id" method="get">
+                            <button type="submit" class="btn btn-info">View</button>
+                        </form>
+
+                     </td>
+                
+                </tr>
+
+                
+            }
+        </tbody>
+    </table>
+}
+
